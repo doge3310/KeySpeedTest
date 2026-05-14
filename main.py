@@ -1,47 +1,57 @@
 import keyboard
 import regex as re
 import random
+import os
 
 
-def generate_text(lenth: int):
-    random_words = []
+class Tuping:
+    def __init__(self, sentense_len: int):
+        if sentense_len >= 50:
+            raise ValueError("Invalid length, must be less than 50")
 
-    with open("./data.txt", mode="r", encoding="UTF-8") as file:
-        text = file.read()
-        text = re.sub(r'[^\pL\p{Space}]', '', text)
-        list_text = text.lower().replace("\n", "").split(" ")
+        self.index = 0
+        self.text = self.generate_text(sentense_len)
+        self.sentense_len = sentense_len
 
-    for _ in range(lenth):
-        random_words.append(list_text[random.randint(0, len(list_text) - 1)])
+        print(self.text)
 
-    return " ".join(random_words)
+    def generate_text(self, lenth: int):
+        random_words = []
 
+        with open("./data.txt", mode="r", encoding="UTF-8") as file:
+            text = file.read()
+            text = re.sub(r'[^\pL\p{Space}]', '', text)
+            list_text = text.lower().replace("\n", "").split(" ")
 
-index = 0
-text = generate_text(10)
-print(text)
+        for _ in range(lenth):
+            random_words.append(list_text[random.randint(0, len(list_text) - 1)])
 
+        return " ".join(random_words)
 
-def pressed_key(key: keyboard.KeyboardEvent):
-    global index
-    global text
+    def pressed_key(self, key: keyboard.KeyboardEvent):
 
-    try:
-        if key.name == text[index] or (key.name == "space" and text[index] == " "):
-            print(text[index:], end="\r")
+        try:
+            if key.name == self.text[self.index] or \
+               (key.name == "space" and self.text[self.index] == " "):
+                print(self.text[self.index:] + " " * 50, end="\r")
 
-            index += 1
+                self.index += 1
 
-    except IndexError:
-        index -= 1
+        except IndexError:
+            self.index = 0
 
-    if key.name == "esc":
-        text = generate_text(10)
-        index = 0
+        if key.name == "enter":
+            self.text = self.generate_text(self.sentense_len)
+            self.index = 0
 
-        print(text)
+            print(self.text)
+
+        elif key.name == "esc":
+            os._exit(0)
 
 
 if __name__ == "__main__":
-    keyboard.on_press(pressed_key)
+    tuping = Tuping(10)
+
+    keyboard.on_press(tuping.pressed_key)
     keyboard.wait()
