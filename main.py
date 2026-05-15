@@ -18,7 +18,7 @@ class Tuping:
     def generate_text(self, lenth: int):
         random_words = []
 
-        with open("./data.txt", mode="r", encoding="UTF-8") as file:
+        with open("./text.txt", mode="r", encoding="UTF-8") as file:
             text = file.read()
             text = re.sub(r'[^\pL\p{Space}]', '', text)
             list_text = text.lower().replace("\n", "").split(" ")
