@@ -11,6 +11,7 @@ class Tuping:
             raise ValueError("Invalid length, must be less than 50")
 
         self.dir = text_dir
+
         self.index = 0
         self.sentense_len = sentense_len
         self.text = self.generate_text(sentense_len)
@@ -80,6 +81,7 @@ class Tuping:
 
 if __name__ == "__main__":
     directory = "./text.txt"
+
     tuping = Tuping(10, directory)
 
     with keyboard.Listener(on_press=tuping.pressed_key) as listener:
